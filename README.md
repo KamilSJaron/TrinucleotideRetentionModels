@@ -1,4 +1,4 @@
-# TrinucleotideRetentionModels
+# Models Trinucleotide Retention 
 This repository is a sumplement information to paper XXXXXX, showing exact script used to acess pushlished results. 
 The organisation is as follows:
 
