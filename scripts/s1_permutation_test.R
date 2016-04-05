@@ -42,17 +42,25 @@ for(i in 1:10000){
 } 
 
 pdf('./output/s1_rsq_hist_BSmodel.pdf')
-hist(r_sqs, main = 'random models logk ~ st + nd + rd', xlab = 'adj. R srqared')
+hist(r_sqs, main = 'random models logk ~ st + nd + rd', xlim = c(min(r_sqs),max(c(r_sqs,BS_r))), xlab = 'adj. R srqared')
+points(BS_r,0, col = 'red', pch = 20)
+legend('topright', pch = c(21,20), col = c('black', 'red'), legend = c('ranodomly permutated models', 'BS model'))
 dev.off()
 
 pdf('./output/s1_rsq_hist_ASmodel.pdf')
-hist(r_sqs_int, main = 'logk ~ st + nd + rd + st:nd + nd:rd', xlab = 'adj. R srqared')
+hist(r_sqs_int, main = 'logk ~ st + nd + rd + st:nd + nd:rd', xlim = c(min(r_sqs_int),max(c(r_sqs_int,AS_r))), xlab = 'adj. R srqared')
+points(AS_r,0, col = 'red', pch = 20)
+legend('topright', pch = c(21,20), col = c('black', 'red'), legend = c('ranodomly permutated models', 'AS model'))
 dev.off()
 
 pdf('./output/s1_pval_hist_BSmodel.pdf')
-  hist(p_vals, main = 'random models logk ~ st + nd + rd', xlab = 'p-val')
+  hist(log(p_vals, 10), main = 'random models logk ~ st + nd + rd', xlim = log(c(min(p_vals,BS_pval),max(p_vals,BS_pval)), 10), xlab = 'log(p-val, 10)')
+  points(log(BS_pval, 10),0, col = 'red', pch = 20)
+  legend('topleft', pch = c(21,20), col = c('black', 'red'), legend = c('ranodomly permutated models', 'BS model'))
 dev.off()
 
 pdf('./output/s1_hist_pval_ASmodel.pdf')
-hist(p_vals_int, main = 'logk ~ st + nd + rd + st:nd + nd:rd', xlab = 'p-val')
+  hist(log(p_vals_int, 10), main = 'random models logk ~ st + nd + rd + st:nd + nd:rd', xlim = log(c(min(p_vals_int,AS_pval),max(p_vals_int,AS_pval)), 10), xlab = 'log(p-val, 10)')
+  points(log(AS_pval, 10),0, col = 'red', pch = 20)
+  legend('topleft', pch = c(21,20), col = c('black', 'red'), legend = c('ranodomly permutated models', 'AS model'))
 dev.off()
