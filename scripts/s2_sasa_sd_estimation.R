@@ -1,63 +1,23 @@
-# solve how to read is (one way out is to replace every pair of spaces by a space)
+# Flyvbjerg & Petersen 1989, ESTIMATORS BASED ON THE CORRELATION FUNCTIONS
 
+# load sasa data
 sasaTS = data.frame(order = 1:40000)
 for(st in c('A','T','G')){
   for(nd in c('A','T','G')){
     for(rd in c('A','T','G')){
       trink <- paste(st,nd,rd,sep = '')
-      file <- paste('/Volumes/dump/data/chemical_properties_nucl/sasa/',trink,'.sasa', sep = '')
+      file <- paste('./data/sasa/',trink,'.sasa', sep = '')
       trink_values <- read.csv(file,header = F, sep = ' ', dec = '.')[,3]
       sasaTS[,as.character(trink)] <- trink_values
     }
   }
 }
 
-CIs <- data.frame(trink = '', lb = 0, mean = 0, rb = 0)
-for(st in c('A','T','G')){
-  for(nd in c('A','T','G')){
-    for(rd in c('A','T','G')){
-      trink = paste(st,nd,rd,sep = '')
-      n = length(sasaTS[,trink]) 
-      s = sd(sasaTS[,trink])        # sample standard deviation 
-      SE = s/sqrt(n)             # standard error estimate 
-      E = qt(.975, df=n-1)*SE     # margin of error 
-      xbar = mean(sasaTS[,trink])   # sample mean 
-      CIs <- rbind(CIs, data.frame(trink = trink, lb = xbar-E, mean = xbar, rb = xbar+E))
-    }
-  }
-}
-CIs <- CIs[-1,]
-
-source('/Volumes/dump/scripts/R/start_up/table_print.R')
-print.wikitable(CIs)
-
-for(st in c('A','T','G')){
-  for(nd in c('A','T','G')){
-    for(rd in c('A','T','G')){
-      trink <- paste(st,nd,rd,sep = '')
-      acf(sasaTS[,trink], lag.max = NULL,
-          type = c("correlation"),
-          plot = TRUE, na.action = na.fail, demean = TRUE)
-      readline();
-    }
-  }
-}
-
-
-AAAacf <- acf(sasaTS[,'AAA'], lag.max = NULL,
-    type = c("correlation"),
-    plot = TRUE, na.action = na.fail, demean = TRUE)
-
-
-tau <- min(which(AAAacf$acf < 0.05))
-x <- sasaTS[,'AAA']
-
+# smaller computing functions
 setCutoff <- function(tau = 15, threshold = 0.05, Tmin = 0, Tmax = 100){
   ser <- exp(-seq(Tmin,Tmax) / tau)
   return(seq(Tmin,Tmax)[min(which(ser < threshold))])
 }
-
-cutoff <- setCutoff(tau)
 
 getCt <- function(x,rs){
   n <- length(x)
@@ -76,7 +36,8 @@ getAutocorVar <- function(x, cutoff){
   return((upper / lower))
 }
 
-vartab <- data.frame(trink = '', mean = 0, tau = 0, T = 0, var = 0)
+#estimation of variance for all trinucleotides
+vartab <- data.frame(trink = numeric(0), mean = numeric(0), tau = numeric(0), T = numeric(0), var = numeric(0))
 for(st in c('A','T','G')){
   for(nd in c('A','T','G')){
     for(rd in c('A','T','G')){
@@ -89,17 +50,7 @@ for(st in c('A','T','G')){
     }
   }
 }
-vartab <- vartab[-1,]
 
 vartab$sd <- sqrt(vartab$var)
-vartab
 
-
-source('/Volumes/dump/scripts/R/start_up/table_print.R')
-print.wikitable(vartab)
-
-write.csv(vartab,'~/Downloads/160311SASA_errors.csv')
-
-
-
-
+write.csv(vartab, './output/s2_sasa_sd.csv')

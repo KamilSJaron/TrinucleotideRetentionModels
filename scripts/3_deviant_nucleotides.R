@@ -1,25 +1,29 @@
-# ======= CV fyzikalne spravneho modelu =======
+source('./scripts/test_trink.R')
+# ======= NNN model =======
 # log(k) = a*E_gb + b*SASA + c
 
-retention$sasaALL <- retention$sasaPSAsur + retention$sasaNSAsur
+# setting for crossvalidation: 27 = leave-one out, changing this to lower number will cause different type of cv
+m_for_cv = 27 
 
-fcor_model <- lm(logk ~ egb + sasaALL, data = retention)
-fcor_model_wo_intercept <- lm(logk ~ -1 + egb + sasaALL, data = retention)
+model_formula <- "logk ~ egb + sasaALL"
+model1 <- lm(model_formula, data=retention)
+kfCV <- cv.lm(retention, model1, m = 27, plotit = F)
 
-summary(fcor_model)
-summary(fcor_model_wo_intercept)
+MSE_tab <- data.frame(nk = 'intercept', MSE = mean(model1$residuals^2), cvMSE = mean((kfCV$cvpred - kfCV$logk)^2), Adj.R2 = summary(model1)$adj.r.squared)
 
-kfCV <- cv.lm(retention, fcor_model, m = 27, plotit = F)
-kfCV_wo_intercept <- cv.lm(retention, fcor_model, m = 27, plotit = F)
+# test_trink is the function which tests all possible (those which are not included yet) nucleoties and neibouring nucleotide combinations taking fomula, source data.frame and parameter for crossvalidation as arguments.
+res <- test_trink(model_formula, retention, cv_m = m_for_cv)
 
-anova(fcor_model)
-anova(fcor_model_wo_intercept)
+while(dim(res)[1] > 0){
+  addedNk <- levels(res[1,]$component)[which(levels(res[1,]$component) == res[1,]$component)]
+  model_formula <- paste(model_formula,addedNk, sep = ' + ')
+  model1 <- lm(model_formula, data=retention)
+  MSE_tab <- rbind(MSE_tab, data.frame(nk = addedNk, MSE = res$MSE[1], cvMSE = res$cvMSE[1], Adj.R2 = summary(model1)$adj.r.squared))
+  res <- test_trink(model_formula, retention, cv_m = m_for_cv)
+}
 
-hist(fcor_model$residuals)
-hist(fcor_model_wo_intercept$residuals)
+write.csv(MSE_tab, file = './output/3_deviant_nucleotides.csv')
 
-mean(fcor_model$residuals^2)
-mean((kfCV$cvpred - kfCV$logk)^2)
-
-mean(fcor_model_wo_intercept$residuals^2)
-mean((kfCV_wo_intercept$cvpred - kfCV_wo_intercept$logk)^2)
+capture.output(summary(model1), file = './output/3_NGA_model_summary.txt')
+capture.output(print('ANOVA'), file = './output/3_NGA_model_summary.txt', append = T)
+capture.output(anova(model1), file = './output/3_NGA_model_summary.txt', append = T)
