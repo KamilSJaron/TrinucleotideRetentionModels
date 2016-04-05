@@ -12,4 +12,4 @@ The organisation is as follows:
 
 R packages DAAG and MASS are needed to compute the output. If they are present, the following command should execute all scripts:
 
-./Rscipt execute_all.R
+Rsrcipt ./execute_all.R
