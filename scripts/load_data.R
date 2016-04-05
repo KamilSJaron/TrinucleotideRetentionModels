@@ -1,8 +1,3 @@
-# ---- Packages ----
-
-library(MASS)
-library(DAAG)
-
 # ---- Data ----
 
 retention <- read.csv('./data/retention.csv',sep=',',dec=',')
