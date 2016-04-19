@@ -1,5 +1,6 @@
 # Models of trinucleotide retention in reverse phased liquid chromatography
-This repository is a sumplement information, showing exact scripts used to compute pushlished results. 
+This repository is a sumplement information of article: "Thou shalt know thy neighbour – A sequence dependent separation of trinucleotides by ion-interaction reversed-phase liquid chromatography" by Mikulášek et al.. 
+All scripts used to compute pushlished results are present. 
 The organisation is as follows:
 
 ./data/ - folder of all input data: simulation series of SASA and egb, retention times
