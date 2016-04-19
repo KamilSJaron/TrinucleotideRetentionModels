@@ -1,8 +1,11 @@
+# load test_trink function
+
 source('./scripts/test_trink.R')
+
 # ======= NNN model =======
 # log(k) = a*E_gb + b*SASA + c
 
-# setting for crossvalidation: 27 = leave-one out, changing this to lower number will cause different type of cv
+# setting for crossvalidation: 27 = leave-one out, changing this to lower number will cause different type of cv. The results wont be affected dramatically.
 m_for_cv = 27 
 
 model_formula <- "logk ~ egb + sasaALL"
@@ -14,6 +17,7 @@ MSE_tab <- data.frame(nk = 'intercept', MSE = mean(model1$residuals^2), cvMSE = 
 # test_trink is the function which tests all possible (those which are not included yet) nucleoties and neibouring nucleotide combinations taking fomula, source data.frame and parameter for crossvalidation as arguments.
 res <- test_trink(model_formula, retention, cv_m = m_for_cv)
 
+# run function testing nucletodes until no siginificant deviant nucleotides or interactions are found
 while(dim(res)[1] > 0){
   addedNk <- levels(res[1,]$component)[which(levels(res[1,]$component) == res[1,]$component)]
   model_formula <- paste(model_formula,addedNk, sep = ' + ')
