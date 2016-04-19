@@ -1,7 +1,10 @@
+#  fucntion testing a most deviating nucleotide, reporting a table of all significant nucleotides.
+# if table_out = False, the table is printed and only the most significant nucleotide is returned
+
 test_trink <- function(model_formula, retention, table_out = F, alpha = 0.05, cv_m = 27){
   model1 <- lm(model_formula, data=retention)
   stnks <- c("A_1","G_1","T_1")
-  middlenks = c("A_2","G_2","T_2")
+  middlenks <- c("A_2","G_2","T_2")
   lastnks <- c("A_3","G_3","T_3")
   total_tests <- length(stnks) * length(middlenks) + 
     length(lastnks) * length(middlenks) + 
@@ -11,9 +14,12 @@ test_trink <- function(model_formula, retention, table_out = F, alpha = 0.05, cv
   for(nk2 in middlenks){ 
     for(nk in stnks){
       f <- model_formula
+      # this condition allows to skip all pairs nucleotides on 1st and 2nd position already included in the model
       if(grepl(paste(nk,nk2,sep = ':'),f)){ next }
       f <- paste(f, paste(nk,nk2, sep=":") , sep=" + ")
+      # build a submodel of the imput model
       model2 <- lm(f, data=retention)
+      # test it, if it is significant, write it in the table
       if(anova(model1,model2)$`Pr(>F)`[2] < alpha / total_tests){
         kfCV <- suppressMessages(suppressWarnings(cv.lm(retention, model2, m = cv_m, printit = F)))
         trink_buffer <- rbind(trink_buffer, data.frame(component = paste(nk,nk2, sep=":"), 
@@ -26,6 +32,7 @@ test_trink <- function(model_formula, retention, table_out = F, alpha = 0.05, cv
     }
     for(nk3 in lastnks){
       f <- model_formula
+      # this condition allows to skip all pairs nucleotides on 2st and 3nd position already included in the model
       if(grepl(paste(nk2,nk3,sep = ':'),f)){ next }
       f <- paste(f, paste(nk2,nk3, sep=":") , sep=" + ")
       model2 <- lm(f, data=retention)
@@ -43,6 +50,7 @@ test_trink <- function(model_formula, retention, table_out = F, alpha = 0.05, cv
   
   for(nk in c(stnks, middlenks, lastnks)){
     f <- model_formula
+    # this condition allows to skip all nucleotides already included in the model
     if(grepl(paste(' ',nk,sep = ''),f)){ next }
     f <- paste(f, nk, sep=" + ")
     model2 <- lm(f, data=retention)
