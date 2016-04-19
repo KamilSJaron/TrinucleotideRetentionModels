@@ -1,4 +1,4 @@
-# ======= CV fyzikalne spravneho modelu =======
+# ======= CV physically correct model =======
 # log(k) = a*E_gb + b*SASA + c
 
 NNN_model <- lm(logk ~ egb + sasaALL, data = retention)
