@@ -1,8 +1,8 @@
 # Models of trinucleotide retention in reverse phased liquid chromatography
-This repository is a sumplement information to paper XXXXXX, showing exact script used to acess pushlished results. 
+This repository is a sumplement information, showing exact scripts used to compute pushlished results. 
 The organisation is as follows:
 
-./data/ - folder of all input data: SASA monte carlo simulations and retention times (will be added in the date of publicaiton)
+./data/ - folder of all input data: simulation series of SASA and egb, retention times
 
 ./scripts/ - all computing R scripts
 
