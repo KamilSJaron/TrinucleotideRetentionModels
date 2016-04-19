@@ -41,6 +41,9 @@ for(i in 1:10000){
   p_vals_int <- c(p_vals_int, anova(r_mod_i)$`Pr(>F)`[2])
 } 
 
+# p-value histograms plotted without log trnsform (not included) shows its uniform distribution, as it would be expected for random models without biological signal.
+# p-values on logscale shows how far is our model from those produced by random permitations of trinucleotide order. This information is not very clear without log tranformation.
+
 pdf('./output/s1_rsq_hist_BSmodel.pdf')
 hist(r_sqs, main = 'random models logk ~ st + nd + rd', xlim = c(min(r_sqs),max(c(r_sqs,BS_r))), xlab = 'adj. R srqared')
 points(BS_r,0, col = 'red', pch = 20)
