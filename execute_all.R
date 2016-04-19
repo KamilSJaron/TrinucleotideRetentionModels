@@ -27,7 +27,7 @@ source('./scripts/3_deviant_nucleotides.R')
 print('tests for the most deviant nucleotides (equation 11, table 3) , table and summary was saved to ./output/3_deviant_nucleotides.csv and ./output/3_NGA_model_summary.txt respectively')
 
 # ---- sasa standard deviatino estimation ----
-source('./scripts/s2_sasa_sd_estimation.R')
+source('./scripts/s2_sd_autocorrelated_data.R')
 print('Aproxximation of standard deviation of sasa model, output was saved to ./output/s2_sasa_sd.csv')
 
 
