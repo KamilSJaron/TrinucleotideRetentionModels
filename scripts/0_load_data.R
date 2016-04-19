@@ -30,6 +30,7 @@ retention$G_3[which(retention$rd == 'G')] = 1
 sasaALL <- read.csv('./data/sasa_all.csv',sep=',',dec='.', skip = 1)
 egbFile <- read.csv('./data/egb.csv',sep=',',dec='.', skip = 1)
 
+# the retention times were stored in different order than sasa and egb, therefore following loop is pairing correct trinucleotides
 for(i in 1:27){
    j = which(sasaALL$seq == retention$trink[i])
    retention$egb[i] <- egbFile$Egb[j]
