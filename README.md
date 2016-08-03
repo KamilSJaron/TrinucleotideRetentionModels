@@ -13,4 +13,4 @@ The organisation is as follows:
 
 R packages DAAG and MASS are needed to compute the output. If they are present, the following command should execute all scripts:
 
-Rsrcipt ./execute_all.R
+Rscript ./execute_all.R
